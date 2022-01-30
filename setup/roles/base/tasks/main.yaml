@@ -1,0 +1,66 @@
+---
+
+  - name: OS specific tasks
+    include_tasks: centos.yaml
+    when: ansible_os_family == "RedHat"
+
+  - name: OS specific tasks
+    include_tasks: ubuntu.yaml
+    when: ansible_os_family == "Debian"
+
+  - name: Set hostname
+    hostname:
+      name: my-vpn
+
+  - name: Set timezone
+    timezone:
+      name: "{{ tz }}"
+
+  - name: Set PS1
+    lineinfile:
+      path: /etc/profile.d/vpn.sh
+      line: export PS1="(VPN) [\t] \u@\h:\w \\$ \[$(tput sgr0)\]"
+      create: yes
+      owner: root
+      group: root
+      mode: 0644
+      validate: /bin/bash -n %s
+
+  - name: Create VPN user
+    user:
+      name: "{{ vpn_user }}"
+      comment: VPN car
+      uid: 222
+      shell: /bin/bash
+      create_home: True
+      home: "/home/{{ vpn_user }}"
+    register: created_user
+
+  - name: Create VPN password
+    shell: /usr/bin/openssl rand -base64 32
+    register: vpn_pass
+    when: created_user.changed
+
+  - name: Define VPN password
+    shell: echo {{ vpn_user }}:{{ vpn_pass.stdout }} | chpasswd
+    when: created_user.changed
+
+  - name: Details of {{ vpn_user }} user
+    debug: msg="Password for {{ vpn_user }} is {{ vpn_pass.stdout }}"
+    when: created_user.changed
+
+  - name: Create ~{{ vpn_user }}/.ssh folder
+    file:
+      path: "~{{ vpn_user }}/.ssh"
+      state: directory
+      owner: "{{ vpn_user }}"
+      group: "{{ vpn_user }}"
+      mode: 0700
+
+  - name: Upload Pub key
+    copy:
+      src: "{{ ssh_pubkey }}"
+      dest: ~{{ vpn_user }}/.ssh/authorized_keys
+      owner: "{{ vpn_user }}"
+      group: "{{ vpn_user }}"
+      mode: 0700
