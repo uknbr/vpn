@@ -10,5 +10,5 @@
     
   roles:
     - role: base
-#    - role: container
-#    - role: ssh
+    - role: ssh
+    - role: container

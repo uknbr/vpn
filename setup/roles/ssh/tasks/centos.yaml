@@ -1,0 +1,15 @@
+---
+
+  - name: Enable Firewall
+    service:
+      name: firewalld
+      state: started
+      enabled: yes
+
+  - name: Configure Firewall
+    firewalld:
+      port: "{{ ssh_port }}/tcp"
+      permanent: yes
+      state: enabled
+    notify:
+      - restart firewalld

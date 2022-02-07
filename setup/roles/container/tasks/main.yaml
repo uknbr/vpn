@@ -1,29 +1,13 @@
 ---
 
-  - name: Install Docker Prerequisite
-    yum:
-      name: "{{ item }}"
-      state: latest
-    with_items:
-      - yum-utils
-      - device-mapper-persistent-data
-      - lvm2    
+  - name: Container CentOS
+    include_tasks: centos.yaml
+    when: ansible_os_family == "RedHat"
 
-  - name: Configure docker-ce repo
-    get_url:
-      url: https://download.docker.com/linux/centos/docker-ce.repo
-      dest: /etc/yum.repos.d/docker-ce.repo
-      mode: 0644
-      
-  - name: Install Docker
-    yum:
-      name: "{{ item }}"
-      state: present
-    with_items:
-      - containerd.io
-      - docker-ce
-      - docker-ce-cli
-  
+  - name: Container Ubuntu
+    include_tasks: ubuntu.yaml
+    when: ansible_os_family == "Debian"
+
   - name: Install Docker compose
     get_url:
       url : https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-Linux-x86_64
@@ -31,7 +15,7 @@
       mode: 0755
 
   - name: Install Docker module
-    pip: 
+    pip:
       name: docker
       executable: pip3
       state: latest

@@ -20,10 +20,16 @@
 
   - name: Install Fail2ban
     yum:
-      name: "{{ item }}"
+      name: fail2ban
       state: present
-    with_items:
-      - fail2ban
+    when: ansible_os_family == "RedHat"
+
+  - name: Install Fail2ban
+    apt:
+      name: fail2ban
+      state: present
+      update_cache: yes
+    when: ansible_os_family == "Debian"
 
   - name: Configure Fail2ban
     template:
@@ -38,16 +44,10 @@
       state: started
       enabled: yes
 
-  - name: Enable Firewall
-    service:
-      name: firewalld
-      state: started
-      enabled: yes
+  - name: SSH CentOS
+    include_tasks: centos.yaml
+    when: ansible_os_family == "RedHat"
 
-  - name: Configure Firewall
-    firewalld:
-      port: "{{ ssh_port }}/tcp"
-      permanent: yes
-      state: enabled
-    notify:
-      - restart firewalld
+  - name: SSH Ubuntu
+    include_tasks: ubuntu.yaml
+    when: ansible_os_family == "Debian"
