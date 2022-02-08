@@ -8,8 +8,11 @@
 
   - name: Configure Firewall
     firewalld:
-      port: "{{ ssh_port }}/tcp"
+      port: "{{ item.port }}/item.proto"
       permanent: yes
       state: enabled
+    with_items:
+      - { port: '{{ ssh_port }}', proto: 'tcp' }
+      - { port: '1194', proto: 'tcp' }
     notify:
       - restart firewalld
