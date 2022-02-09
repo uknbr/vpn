@@ -4,6 +4,9 @@
     yum:
       name: epel-release
       state: latest
+    tags:
+      - base
+      - centos
 
   - name: Install basic packages
     yum:
@@ -19,3 +22,6 @@
         - jq
         - python3
         - python3-pip
+    tags:
+      - base
+      - centos

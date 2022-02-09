@@ -17,6 +17,8 @@
       - { key: "PasswordAuthentication", value: "no" }      
     notify:
       - restart ssh
+    tags:
+      - ssh
 
   - name: Install Fail2ban
     yum:
@@ -37,12 +39,16 @@
       dest: /etc/fail2ban/jail.local
     notify:
       - restart fail2ban
+    tags:
+      - ssh
 
   - name: Enable Fail2ban
     service:
       name: fail2ban
       state: started
       enabled: yes
+    tags:
+      - ssh
 
   - name: SSH CentOS
     include_tasks: centos.yaml

@@ -5,6 +5,8 @@
       name: firewalld
       state: started
       enabled: yes
+    tags:
+      - ssh
 
   - name: Configure Firewall
     firewalld:
@@ -16,3 +18,5 @@
       - { port: '1194', proto: 'tcp' }
     notify:
       - restart firewalld
+    tags:
+      - ssh

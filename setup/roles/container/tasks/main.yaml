@@ -3,34 +3,46 @@
   - name: Container CentOS
     include_tasks: centos.yaml
     when: ansible_os_family == "RedHat"
+    tags:
+      - docker
 
   - name: Container Ubuntu
     include_tasks: ubuntu.yaml
     when: ansible_os_family == "Debian"
+    tags:
+      - docker
 
   - name: Install Docker compose
     get_url:
       url : https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-Linux-x86_64
       dest: /usr/local/bin/docker-compose
       mode: 0755
+    tags:
+      - docker
 
   - name: Install Docker module
     pip:
       name: docker
-      executable: pip3
+      executable: /usr/bin/pip3
       state: latest
+    tags:
+      - docker
 
   - name: Start and Enable Docker service
     service:
       name: docker
       state: started
       enabled: yes
+    tags:
+      - docker
 
   - name: Add user to docker group
     user:
       name: "{{ vpn_user }}"
       groups: docker
       append: yes
+    tags:
+      - docker
 
   - name: Validate container creation
     docker_container:
@@ -40,3 +52,5 @@
       command: sleep 10s
       cleanup: yes
       detach: no
+    tags:
+      - docker

@@ -7,14 +7,18 @@
     with_items:
       - yum-utils
       - device-mapper-persistent-data
-      - lvm2    
+      - lvm2
+    tags:
+      - docker
 
   - name: Configure docker-ce repo
     get_url:
       url: https://download.docker.com/linux/centos/docker-ce.repo
       dest: /etc/yum.repos.d/docker-ce.repo
       mode: 0644
-      
+    tags:
+      - docker
+
   - name: Install Docker
     yum:
       name: "{{ item }}"
@@ -23,3 +27,5 @@
       - containerd.io
       - docker-ce
       - docker-ce-cli
+    tags:
+      - docker
