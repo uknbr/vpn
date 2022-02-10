@@ -14,7 +14,7 @@
 
   - name: Set hostname
     hostname:
-      name: my-vpn
+      name: "vm-{{ my_spec }}"
     tags:
       - base
 
@@ -26,8 +26,8 @@
 
   - name: Set PS1
     lineinfile:
-      path: /etc/profile.d/vpn.sh
-      line: export PS1="(VPN) [\t] \u@\h:\w \\$ \[$(tput sgr0)\]"
+      path: "/etc/profile.d/{{ my_spec }}.sh"
+      line: export PS1="({{ my_spec | upper }}) [\t] \u@\h:\w \\$ \[$(tput sgr0)\]"
       create: yes
       owner: root
       group: root
@@ -36,43 +36,43 @@
     tags:
       - base
 
-  - name: Create VPN user
+  - name: Create user
     user:
-      name: "{{ vpn_user }}"
-      comment: VPN car
+      name: "{{ my_user }}"
+      comment: "{{ my_spec | upper }}"
       uid: 222
       shell: /bin/bash
       create_home: True
-      home: "/home/{{ vpn_user }}"
+      home: "/home/{{ my_user }}"
     register: created_user
     tags:
       - base
 
-  - name: Create VPN password
+  - name: Create password
     shell: /usr/bin/openssl rand -base64 32
-    register: vpn_pass
+    register: my_pass
     when: created_user.changed
     tags:
       - base
 
-  - name: Define VPN password
-    shell: echo {{ vpn_user }}:{{ vpn_pass.stdout }} | chpasswd
+  - name: Define password
+    shell: echo {{ my_user }}:{{ my_pass.stdout }} | chpasswd
     when: created_user.changed
     tags:
       - base
 
-  - name: Details of {{ vpn_user }} user
-    debug: msg="Password for {{ vpn_user }} is {{ vpn_pass.stdout }}"
+  - name: Details of {{ my_user }} user
+    debug: msg="Password for {{ my_user }} is {{ my_pass.stdout }}"
     when: created_user.changed
     tags:
       - base
 
-  - name: Create ~{{ vpn_user }}/.ssh folder
+  - name: Create ~{{ my_user }}/.ssh folder
     file:
-      path: "~{{ vpn_user }}/.ssh"
+      path: "~{{ my_user }}/.ssh"
       state: directory
-      owner: "{{ vpn_user }}"
-      group: "{{ vpn_user }}"
+      owner: "{{ my_user }}"
+      group: "{{ my_user }}"
       mode: 0700
     tags:
       - base
@@ -80,9 +80,9 @@
   - name: Upload Pub key
     copy:
       src: "{{ ssh_pubkey }}"
-      dest: ~{{ vpn_user }}/.ssh/authorized_keys
-      owner: "{{ vpn_user }}"
-      group: "{{ vpn_user }}"
+      dest: ~{{ my_user }}/.ssh/authorized_keys
+      owner: "{{ my_user }}"
+      group: "{{ my_user }}"
       mode: 0700
     tags:
       - base

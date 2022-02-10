@@ -4,8 +4,6 @@
     apt:
       package: ufw
       state: present
-    tags:
-      - ssh
 
   - name: Configure ufw defaults
     ufw:
@@ -18,6 +16,7 @@
       - restart ufw
     tags:
       - ssh
+      - firewall
 
   - name: Configure ufw rules
     ufw:
@@ -26,12 +25,13 @@
       proto: "{{ item.proto }}"
     with_items:
       - { rule: 'limit', port: '{{ ssh_port }}', proto: 'tcp' }
-      - { rule: 'allow', port: '{{ ssh_port }}', proto: 'tcp' }      
+      - { rule: 'allow', port: '{{ ssh_port }}', proto: 'tcp' }
       - { rule: 'allow', port: '1194', proto: 'tcp' }
     notify:
       - restart ufw
     tags:
       - ssh
+      - firewall
 
   - name: Enable ufw logging
     ufw:
@@ -40,9 +40,11 @@
       - restart ufw
     tags:
       - ssh
+      - firewall
 
   - name: Enable ufw
     ufw:
       state: enabled
     tags:
       - ssh
+      - firewall

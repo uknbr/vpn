@@ -7,6 +7,7 @@
       enabled: yes
     tags:
       - ssh
+      - firewall
 
   - name: Configure Firewall
     firewalld:
@@ -20,3 +21,4 @@
       - restart firewalld
     tags:
       - ssh
+      - firewall

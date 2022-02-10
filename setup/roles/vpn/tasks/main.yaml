@@ -1,0 +1,19 @@
+---
+
+  - name: Git checkout
+    ansible.builtin.git:
+      repo: 'https://github.com/Simonwep/openvpn-pihole.git'
+      dest: "/home/{{ my_user }}/openvpn-pihole"
+      version: master
+    tags:
+      - vpn
+
+  - name: Deploy VPN
+    community.docker.docker_compose:
+      project_name: vpn
+      project_src: "/home/{{ my_user }}/openvpn-pihole"
+      pull: yes
+    vars:
+      ansible_python_interpreter: python3
+    tags:
+      - vpn

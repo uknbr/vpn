@@ -20,11 +20,15 @@
     tags:
       - docker
 
-  - name: Install Docker module
+  - name: Install Docker Modules
     pip:
-      name: docker
+      name:
+        - docker
+        - docker-compose
       executable: /usr/bin/pip3
       state: latest
+    vars:
+      ansible_python_interpreter: python3
     tags:
       - docker
 
@@ -38,7 +42,7 @@
 
   - name: Add user to docker group
     user:
-      name: "{{ vpn_user }}"
+      name: "{{ my_user }}"
       groups: docker
       append: yes
     tags:
@@ -52,5 +56,7 @@
       command: sleep 10s
       cleanup: yes
       detach: no
+    vars:
+      ansible_python_interpreter: python3
     tags:
       - docker
