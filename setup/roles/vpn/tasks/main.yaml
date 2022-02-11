@@ -17,3 +17,13 @@
       ansible_python_interpreter: python3
     tags:
       - vpn
+
+  - name: Create .ovpn file
+    community.docker.docker_container_exec:
+      container: openvpn
+      command: sudo docker exec openvpn bash /opt/app/bin/genclient.sh {{ vpn-name }} {{ vpn-password }}
+    register: ovpn-file
+    vars:
+      ansible_python_interpreter: python3
+    tags:
+      - vpn
