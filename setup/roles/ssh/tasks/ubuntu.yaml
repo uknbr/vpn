@@ -4,6 +4,9 @@
     apt:
       package: ufw
       state: present
+    tags:
+      - ssh
+      - firewall
 
   - name: Configure ufw defaults
     ufw:

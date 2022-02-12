@@ -25,6 +25,8 @@
       name: fail2ban
       state: present
     when: ansible_os_family == "RedHat"
+    tags:
+      - ssh
 
   - name: Install Fail2ban
     apt:
@@ -32,6 +34,8 @@
       state: present
       update_cache: yes
     when: ansible_os_family == "Debian"
+    tags:
+      - ssh
 
   - name: Configure Fail2ban
     template:

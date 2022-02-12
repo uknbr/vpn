@@ -5,6 +5,8 @@
       repo: 'https://github.com/Simonwep/openvpn-pihole.git'
       dest: "/home/{{ my_user }}/openvpn-pihole"
       version: master
+    become: yes
+    become_user: "{{ my_user }}"
     tags:
       - vpn
 
@@ -15,15 +17,21 @@
       pull: yes
     vars:
       ansible_python_interpreter: python3
+    become: yes
+    become_user: "{{ my_user }}"
     tags:
       - vpn
 
   - name: Create .ovpn file
     community.docker.docker_container_exec:
       container: openvpn
-      command: sudo docker exec openvpn bash /opt/app/bin/genclient.sh {{ vpn-name }} {{ vpn-password }}
-    register: ovpn-file
+      argv:
+        - /bin/bash
+        - "-c"
+        - "/opt/app/bin/genclient.sh {{ vpn_name }} {{ vpn_password }}"
     vars:
       ansible_python_interpreter: python3
+    become: yes
+    become_user: "{{ my_user }}"
     tags:
       - vpn
