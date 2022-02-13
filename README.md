@@ -10,6 +10,11 @@
 ### Configuration
 1. setup.yaml
 2. vpn.ini
+3. Vars
+   * ./setup/roles/base/vars/main.yaml
+   * ./setup/roles/container/vars/main.yaml
+   * ./setup/roles/ssh/vars/main.yaml
+   * ./setup/roles/vpn/vars/main.yaml
 
 ### Usage
 
