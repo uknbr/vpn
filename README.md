@@ -13,6 +13,26 @@
 
 ### Usage
 
+#### Bateries included
+
 ```bash
 ansible-playbook setup.yaml
+```
+
+#### VPN configuration
+
+```bash
+ansible-playbook setup.yaml --extra-vars "vpn_name=foo vpn_password=bar"
+```
+
+#### Keep SSH with default config (insecure)
+
+```bash
+ansible-playbook setup.yaml --skip-tags ssh
+```
+
+#### Only VPN (make sure you already have all dependencies)
+
+```bash
+ansible-playbook setup.yaml --tags vpn
 ```
