@@ -19,6 +19,7 @@
       ansible_python_interpreter: python3
     become: yes
     become_user: "{{ my_user }}"
+    register: deployed_vpn
     tags:
       - vpn
 
@@ -31,6 +32,7 @@
         - "/opt/app/bin/genclient.sh {{ vpn_name }} {{ vpn_password }}"
     vars:
       ansible_python_interpreter: python3
+    when: deployed_vpn.changed
     become: yes
     become_user: "{{ my_user }}"
     tags:
