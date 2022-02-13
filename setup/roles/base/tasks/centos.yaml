@@ -25,3 +25,12 @@
     tags:
       - base
       - centos
+
+  - name: Update all packages
+    yum:
+      name: '*'
+      state: latest
+    tags:
+      - base
+      - centos
+      - update

@@ -28,6 +28,7 @@
     tags:
       - base
       - ubuntu
+      - update
 
   - name: Upgrade the OS
     apt:
@@ -35,3 +36,4 @@
     tags:
       - base
       - ubuntu
+      - update
