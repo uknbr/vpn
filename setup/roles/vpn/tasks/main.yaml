@@ -12,7 +12,7 @@
 
   - name: Deploy VPN
     community.docker.docker_compose:
-      project_name: vpn
+      project_name: "{{ my_spec }}"
       project_src: "/home/{{ my_user }}/openvpn-pihole"
       pull: yes
     vars:
