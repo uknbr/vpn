@@ -37,3 +37,18 @@
     become_user: "{{ my_user }}"
     tags:
       - vpn
+
+  - name: Check .ovpn file
+    stat:
+      path: "/home/{{ my_user }}/openvpn-pihole/openvpn/clients/{{ vpn_name }}.ovpn"
+    register: file_vpn
+    when: deployed_vpn.changed
+    tags:
+      - vpn
+
+  - name: Validate .ovpn file
+    fail:
+      msg: "File openvpn/clients/{{ vpn_name }}.ovpn does not exist"
+    when: deployed_vpn.stat.exists == false
+    tags:
+      - vpn
