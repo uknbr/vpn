@@ -23,7 +23,7 @@
     tags:
       - vpn
 
-  - name: Create .ovpn file
+  - name: "Create {{ vpn_name }}.ovpn"
     community.docker.docker_container_exec:
       container: openvpn
       argv:
@@ -38,17 +38,56 @@
     tags:
       - vpn
 
-  - name: Check .ovpn file
+  - name: "Check {{ vpn_name }}.ovpn"
     stat:
       path: "/home/{{ my_user }}/openvpn-pihole/openvpn/clients/{{ vpn_name }}.ovpn"
     register: file_vpn
+    when: deployed_vpn.changed    
+    tags:
+      - vpn
+
+  - name: "Validate {{ vpn_name }}.ovpn"
+    fail:
+      msg: "File '/home/{{ my_user }}/openvpn-pihole/openvpn/clients/{{ vpn_name }}.ovpn' does not exist"
+    when:
+      - deployed_vpn.changed
+      - file_vpn.stat.exists == false
+    tags:
+      - vpn
+
+  - name: "Change {{ vpn_name }}.ovpn ownership"
+    ansible.builtin.file:
+      path: "/home/{{ my_user }}/openvpn-pihole/openvpn/clients/{{ vpn_name }}.ovpn"
+      owner: "{{ my_user }}"
+      group: "{{ my_user }}"
+      mode: '0644'
     when: deployed_vpn.changed
     tags:
       - vpn
 
-  - name: Validate .ovpn file
-    fail:
-      msg: "File openvpn/clients/{{ vpn_name }}.ovpn does not exist"
-    when: deployed_vpn.stat.exists == false
+  - name: Get my public IP
+    uri: 
+      url: http://ifconfig.me/ip
+      return_content: yes
+    register: public_ip
+    when: deployed_vpn.changed
+    tags:
+      - vpn
+
+  - name: "Include public IP into {{ vpn_name }}.ovpn"
+    replace:
+      path: "/home/{{ my_user }}/openvpn-pihole/openvpn/clients/{{ vpn_name }}.ovpn"
+      regexp: '127.0.0.1'
+      replace: "{{ public_ip.content }}"
+    when: deployed_vpn.changed
+    tags:
+      - vpn
+
+  - name: "Download {{ vpn_name }}.ovpn to local {{ vpn_file }}"
+    fetch:
+      src: "/home/{{ my_user }}/openvpn-pihole/openvpn/clients/{{ vpn_name }}.ovpn"
+      dest: "{{ vpn_file }}"
+      flat: yes
+    when: deployed_vpn.changed
     tags:
       - vpn

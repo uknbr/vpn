@@ -1,2 +1,3 @@
 vpn_name: myvpn
 vpn_password: myvpn
+vpn_file: /tmp/
