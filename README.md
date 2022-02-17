@@ -5,7 +5,7 @@
 - Support CentOS and Ubuntu
 - Install Docker and Docker Compose
 - Configure SSH with non default port and fail2ban
-- Clone and deploy amazing project (OpenVPN + PiHole)
+- Clone and deploy amazing project [(OpenVPN + PiHole)](https://github.com/Simonwep/openvpn-pihole)
 
 ### Configuration
 1. setup.yaml
