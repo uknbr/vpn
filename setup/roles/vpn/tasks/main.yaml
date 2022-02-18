@@ -86,7 +86,7 @@
   - name: "Download {{ vpn_name }}.ovpn to local {{ vpn_file }}"
     fetch:
       src: "/home/{{ my_user }}/openvpn-pihole/openvpn/clients/{{ vpn_name }}.ovpn"
-      dest: "{{ vpn_file }}"
+      dest: "{{ inventory_dir }}/"
       flat: yes
     when: deployed_vpn.changed
     tags:
