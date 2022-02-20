@@ -2,10 +2,11 @@
 # vi: set ft=ruby :
 
 VAGRANTFILE_API_VERSION = "2"
+HOST_IP = ENV["WINDOWS_STATIC_IP"]
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Box
-  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.box = "bento/ubuntu-20.04"
   config.vm.box_download_insecure=true
 
   # VM settings
@@ -23,10 +24,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Network | NAT - Forward ports
   config.vm.network :forwarded_port, guest: 1194, host: 1194
+  config.vm.network :forwarded_port, id: "ssh_wsl2_ip", guest: 22, host_ip: HOST_IP, host: 2222
 
   # VM name
   config.vm.define :vpn do |vpn|
   end
   config.vm.hostname = "vpn"
+
+  # Run Ansible - Locally
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "./setup/vpn.yaml"
+    ansible.install = true
+    ansible.verbose = "v"
+    skip_tags = ["ssh", "update"]
+    extra_vars = "vpn_name=vagrant vpn_password=vagrant"
+  end
 
 end
