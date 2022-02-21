@@ -41,3 +41,10 @@ ansible-playbook vpn.yaml --skip-tags ssh
 ```bash
 ansible-playbook vpn.yaml --tags vpn
 ```
+
+### Vagrant
+
+
+```bash
+vagrant up
+```
