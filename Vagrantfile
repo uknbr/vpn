@@ -12,8 +12,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # VM settings
   config.vm.provider "virtualbox" do |vbox|
     vbox.name = "vpn"
-    vbox.memory = 1024
-    vbox.cpus = 1
+    vbox.memory = 1536
+    vbox.cpus = 2
     vbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vbox.customize ["modifyvm", :id, "--ioapic", "on"]
     vbox.customize ["modifyvm", :id, "--name", "vpn"]
