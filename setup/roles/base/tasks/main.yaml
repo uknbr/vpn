@@ -66,23 +66,3 @@
     when: created_user.changed
     tags:
       - base
-
-  - name: Create ~{{ my_user }}/.ssh folder
-    file:
-      path: "~{{ my_user }}/.ssh"
-      state: directory
-      owner: "{{ my_user }}"
-      group: "{{ my_user }}"
-      mode: 0700
-    tags:
-      - base
-
-  - name: Upload Pub key
-    copy:
-      src: "{{ ssh_pubkey }}"
-      dest: ~{{ my_user }}/.ssh/authorized_keys
-      owner: "{{ my_user }}"
-      group: "{{ my_user }}"
-      mode: 0700
-    tags:
-      - base
