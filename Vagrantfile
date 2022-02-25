@@ -36,7 +36,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "./setup/vpn.yaml"
     ansible.install = true
     ansible.config_file = "./setup/ansible.cfg"
-    ansible.verbose = "vvv"
     ansible.skip_tags = ["ssh", "update"]
     ansible.extra_vars = {
       vpn_name: "vagrant",
