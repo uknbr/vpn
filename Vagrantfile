@@ -31,7 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.vm.hostname = "vpn"
 
-  # Run Ansible - Locally
+  # Run Ansible
   config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "./setup/vpn.yaml"
     ansible.install = true
