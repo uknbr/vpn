@@ -1,5 +1,22 @@
 ---
 
+  - name: Install Fail2ban
+    apt:
+      name: fail2ban
+      state: present
+      update_cache: yes
+    tags:
+      - ssh
+
+  - name: Configure Fail2ban
+    template:
+      src: fail2ban-ubuntu.j2
+      dest: /etc/fail2ban/jail.local
+    notify:
+      - restart fail2ban
+    tags:
+      - ssh
+
   - name: Install ufw
     apt:
       package: ufw

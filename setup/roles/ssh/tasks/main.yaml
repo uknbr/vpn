@@ -40,32 +40,6 @@
     tags:
       - ssh
 
-  - name: Install Fail2ban
-    yum:
-      name: fail2ban
-      state: present
-    when: ansible_os_family == "RedHat"
-    tags:
-      - ssh
-
-  - name: Install Fail2ban
-    apt:
-      name: fail2ban
-      state: present
-      update_cache: yes
-    when: ansible_os_family == "Debian"
-    tags:
-      - ssh
-
-  - name: Configure Fail2ban
-    template:
-      src: fail2ban.j2
-      dest: /etc/fail2ban/jail.local
-    notify:
-      - restart fail2ban
-    tags:
-      - ssh
-
   - name: Enable Fail2ban
     service:
       name: fail2ban
