@@ -40,14 +40,6 @@
     tags:
       - ssh
 
-  - name: Enable Fail2ban
-    service:
-      name: fail2ban
-      state: started
-      enabled: yes
-    tags:
-      - ssh
-
   - name: SSH CentOS
     include_tasks: centos.yaml
     when: ansible_os_family == "RedHat"
@@ -55,3 +47,11 @@
   - name: SSH Ubuntu
     include_tasks: ubuntu.yaml
     when: ansible_os_family == "Debian"
+
+  - name: Enable Fail2ban
+    service:
+      name: fail2ban
+      state: started
+      enabled: yes
+    tags:
+      - ssh
